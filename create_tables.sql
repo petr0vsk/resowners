@@ -1,3 +1,10 @@
+drop table if exists servers cascade;
+drop table if exists network_drives cascade;
+drop table if exists directories cascade;
+drop table if exists users cascade;
+drop table if exists directory_owners cascade;
+drop table if exists directory_second_owner cascade;
+
 set search_path to public;
 -- Таблица серверов
 CREATE TABLE if not exists servers (
