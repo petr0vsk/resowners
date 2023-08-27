@@ -1,15 +1,16 @@
 from flask import Flask, render_template_string
+from decouple import config
 import psycopg2
 
 app = Flask(__name__)
 
 # Параметры подключения к PostgreSQL
 DATABASE_CONFIG = {
-    'dbname': 'owners',
-    'user': 'postgres',
-    'password': '34times34',
-    'host': 'localhost',
-    'port': '5432'
+    'dbname': config('DB_NAME'),
+    'user': config('DB_USER'),
+    'password': config('DB_PASSWORD'),
+    'host': config('DB_HOST'),
+    'port': config('DB_PORT')
 }
 
 @app.route('/')
