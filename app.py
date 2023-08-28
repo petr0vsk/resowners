@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string
+from flask import Flask, render_template, g, request
 from decouple import config
 import psycopg2
 
@@ -13,7 +13,7 @@ DATABASE_CONFIG = {
     'port': config('DB_PORT')
 }
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def index():
     # Устанавливаем соединение с базой данных
     conn = psycopg2.connect(**DATABASE_CONFIG)
@@ -26,28 +26,8 @@ def index():
     cursor.close()
     conn.close()
 
-    return render_template_string("""
-        <table>
-            <tr>
-                <th>Server Name</th>
-                <th>Drive Path</th>
-                <th>Path</th>
-                <th>Owner</th>
-                <th>Second Owner</th>
-                <th>Note</th>
-            </tr>
-            {% for item in data %}
-            <tr>
-                <td>{{ item[0] }}</td>
-                <td>{{ item[1] }}</td>
-                <td>{{ item[2] }}</td>
-                <td>{{ item[3] }}</td>
-                <td>{{ item[4] }}</td>
-                <td>{{ item[5] }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    """, data=data)
+    return render_template('home.html', data=data)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
