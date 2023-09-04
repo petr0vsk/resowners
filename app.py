@@ -10,13 +10,18 @@ def index():
 
     page = request.args.get('page', 1, type=int) # к-во страниц
     offset = (page - 1) * LIMIT # смещение
-
-    total = get_total_records()
-    data = get_records(LIMIT, offset)
+    servers = get_servers()
+    selected_server = request.args.get('server')
+    total = get_total_records(selected_server)
+    if selected_server:  # Если сервер выбран
+        data = get_records(selected_server, LIMIT, offset)
+    else:  # Если сервер не выбран, выводим все данные
+        data = get_records(None, LIMIT, offset)
 
     pages = range(1, total // LIMIT + 2)
-    servers = get_servers()
-    return render_template('home.html', data=data, pages=pages, current_page=page, servers=servers)
+    return render_template('home.html', data=data, pages=pages, current_page=page, servers=servers,
+                           selected_server=selected_server)
+
 
 
 
