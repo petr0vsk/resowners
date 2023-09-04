@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
 <div class="container-fluid">
-    <table class="table">
+    <table class="table table-dark table-success table-striped">
             <tr>
                 <th>Server Name</th>
                 <th>Drive Path</th>
@@ -21,5 +21,12 @@
             </tr>
             {% endfor %}
         </table>
+
+    <div class="pagination">
+    {% for page_num in pages %}
+        <a class="{% if page_num == current_page %}active{% endif %}" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
+    {% endfor %}
+</div>
+
     </div>
 {% endblock %}

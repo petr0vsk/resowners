@@ -12,6 +12,7 @@ DATABASE_CONFIG = {
     'host': config('DB_HOST'),
     'port': config('DB_PORT')
 }
+LIMIT = 30  # количество записей на одной странице
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -19,14 +20,23 @@ def index():
     conn = psycopg2.connect(**DATABASE_CONFIG)
     cursor = conn.cursor()
 
-    # Выполняем запрос к представлению vw_tmp_import
-    cursor.execute("SELECT * FROM vw_tmp_import")
+    page = request.args.get('page', 1, type=int)
+    offset = (page - 1) * LIMIT
+
+    conn = psycopg2.connect(**DATABASE_CONFIG)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM vw_tmp_import")
+    total = cursor.fetchone()[0]
+
+    cursor.execute(f"SELECT * FROM vw_tmp_import LIMIT {LIMIT} OFFSET {offset}")
     data = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
-    return render_template('home.html', data=data)
+    pages = range(1, total // LIMIT + 2)
+    return render_template('home.html', data=data, pages=pages, current_page=page)
 
 
 if __name__ == '__main__':
