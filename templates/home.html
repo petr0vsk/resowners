@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 {% block body %}
 <div class="container-fluid">
+     <!-- Dropdown menu -->
+    <div class="dropdown">
+        <label for="serverSelect">Choose a server:</label>
+        <select id="serverSelect" name="server">
+            {% for server in servers %}
+            <option value="{{ server }}">{{ server }}</option>
+            {% endfor %}
+        </select>
+    </div>
+     <!-- Table -->
     <table class="table table-dark table-success table-striped">
             <tr>
                 <th>Server Name</th>
