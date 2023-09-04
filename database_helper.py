@@ -31,21 +31,28 @@ def get_total_records(server_name=None):
 def get_records(server_name, limit, offset):
     with get_connection() as conn:
         with conn.cursor() as cursor:
-            if server_name: # если сервер выбран
+            if server_name == "ALL" or not server_name:
+                cursor.execute(
+                    f"SELECT * FROM vw_tmp_import LIMIT {limit} OFFSET {offset}"
+                )
+            else:
                 cursor.execute(
                     f"SELECT * FROM vw_tmp_import WHERE server_name = %s LIMIT {limit} OFFSET {offset}",
                     (server_name,)
-                )
-            else:  # иначе выводит все записи
-                cursor.execute(
-                    f"SELECT * FROM vw_tmp_import LIMIT {limit} OFFSET {offset}"
                 )
             return cursor.fetchall()
 
 
 # получим список серверов для выпадающего меню
+'''
 def get_servers():
     with get_connection() as conn:
         with conn.cursor() as cursor:
             cursor.execute("SELECT server_name FROM servers")
             return [row[0] for row in cursor.fetchall()]
+'''
+def get_servers():
+    with get_connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT DISTINCT server_name FROM vw_tmp_import")
+            return cursor.fetchall()

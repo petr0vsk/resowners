@@ -5,12 +5,15 @@
     <div class="dropdown">
         <form method="GET" action="{{ url_for('index') }}">
             <label for="serverSelect">Choose a server:</label>
-            <select id="serverSelect" name="server" onchange="this.form.submit()">
-                {% for server in servers %}
-                <option value="{{ server }}" {% if server == selected_server %}selected{% endif %}>{{ server }}</option>
-                {% endfor %}
-            </select>
-</form>
+           <select name="server" onchange="this.form.submit()">
+                    <option value="" {% if not selected_server %}selected{% endif %}>Select a server</option>
+                    {% for server in servers %}
+                        <option value="{{ server[0] }}" {% if server[0] == selected_server %}selected{% endif %}>{{ server[0] }}</option>
+                    {% endfor %}
+                    <option value="ALL" {% if selected_server == "ALL" %}selected{% endif %}>ALL</option>
+           </select>
+
+        </form>
 
     </div>
      <!-- Table -->
@@ -37,7 +40,10 @@
 
     <div class="pagination">
     {% for page_num in pages %}
-        <a class="{% if page_num == current_page %}active{% endif %}" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
+      <a class="{% if page_num == current_page %}active{% endif %}"
+                   href="{{ url_for('index', page=page_num, server=selected_server) }}">
+                   {{ page_num }}
+       </a>
     {% endfor %}
 </div>
 

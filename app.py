@@ -11,7 +11,10 @@ def index():
     page = request.args.get('page', 1, type=int) # к-во страниц
     offset = (page - 1) * LIMIT # смещение
     servers = get_servers()
+    print(servers)
     selected_server = request.args.get('server')
+    if selected_server == "ALL": # обработаем п.меню для возврата к выбору всех серверов
+        selected_server = None
     total = get_total_records(selected_server)
     if selected_server:  # Если сервер выбран
         data = get_records(selected_server, LIMIT, offset)
