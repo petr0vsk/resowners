@@ -21,7 +21,7 @@ def index():
     if selected_owner == "ALL":
         selected_owner = None
 
-    total = get_total_records(selected_server)
+    total = get_total_records(selected_server, selected_owner)
     data = get_records(selected_server, selected_owner, LIMIT, offset)
     pages = range(1, total // LIMIT + 2)
 

@@ -13,19 +13,28 @@ DATABASE_CONFIG = {
 def get_connection():
     return psycopg2.connect(**DATABASE_CONFIG)
 # получим общее количество записей
-def get_total_records(server_name=None):
+def get_total_records(server_name=None, owner_name=None):
     with get_connection() as conn:
         with conn.cursor() as cursor:
-            if server_name: # если сервер указан выводим записи только по нему
+            if server_name and owner_name:
+                cursor.execute(
+                    "SELECT COUNT(*) FROM vw_tmp_import WHERE server_name = %s AND full_name_owner = %s",
+                    (server_name, owner_name)
+                )
+            elif server_name:
                 cursor.execute(
                     "SELECT COUNT(*) FROM vw_tmp_import WHERE server_name = %s",
                     (server_name,)
                 )
-            else:
-                cursor.execute(  # иначе выводим количество всех строк датафрейма
-                    "SELECT COUNT(*) FROM vw_tmp_import"
+            elif owner_name:
+                cursor.execute(
+                    "SELECT COUNT(*) FROM vw_tmp_import WHERE full_name_owner = %s",
+                    (owner_name,)
                 )
+            else:
+                cursor.execute("SELECT COUNT(*) FROM vw_tmp_import")
             return cursor.fetchone()[0]
+
 
 def get_records(server_name, owner_name, limit, offset):
     """
