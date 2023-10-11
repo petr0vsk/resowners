@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from resowners.database_helper import get_total_records, get_records, get_servers, get_owners
+from database_helper import get_total_records, get_records, get_servers, get_owners
 
 app = Flask(__name__)
 
